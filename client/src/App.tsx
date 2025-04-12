@@ -27,8 +27,6 @@ function Router() {
   );
 }
 
-import { queryClient } from './lib/queryClient';
-
 function App() {
   return (
     <QueryClientProvider client={queryClient}>

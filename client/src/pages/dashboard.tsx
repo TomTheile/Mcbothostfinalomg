@@ -21,8 +21,7 @@ export default function Dashboard() {
   useEffect(() => {
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const hostname = window.location.hostname;
-    const port = window.location.port || (protocol === 'wss:' ? '443' : '80');
-    const ws = new WebSocket(`${protocol}//${hostname}:${port}`);
+    const ws = new WebSocket(`${protocol}//${hostname}`);
     
     ws.onmessage = (event) => {
       const message = JSON.parse(event.data);

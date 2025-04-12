@@ -20,11 +20,12 @@ type AuthContextType = {
 
 export const AuthContext = createContext<AuthContextType>({
   user: null,
-  login: async () => {},
-  logout: async () => {},
-  register: async () => {},
   isLoading: false,
-  error: null
+  error: null,
+  loginMutation: {} as UseMutationResult<SelectUser, Error, { username: string; password: string }>,
+  logoutMutation: {} as UseMutationResult<void, Error, void>,
+  registerMutation: {} as UseMutationResult<SelectUser, Error, InsertUser>,
+  resendVerificationMutation: {} as UseMutationResult<{ message: string }, Error, { email: string }>
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {

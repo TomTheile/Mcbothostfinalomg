@@ -12,8 +12,14 @@ export function setupWebSocket(server: Server) {
 
     // Send initial data
     const sendUpdate = async () => {
-      const bots = await storage.getBots();
-      ws.send(JSON.stringify({ type: 'BOTS_UPDATE', data: bots }));
+      try {
+        const bots = await storage.getBots();
+        if (ws.readyState === ws.OPEN) {
+          ws.send(JSON.stringify({ type: 'BOTS_UPDATE', data: bots }));
+        }
+      } catch (error) {
+        console.error('WebSocket update error:', error);
+      }
     };
 
     // Send updates every 2 seconds

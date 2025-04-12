@@ -79,6 +79,8 @@ export default function AuthPage() {
       if (data.needsVerification) {
         setVerificationEmail(data.email);
         setShowVerification(true);
+        // Nach erfolgreicher Registrierung zur Login-Seite umschalten
+        setActiveTab("login");
       }
     }
   });
@@ -134,9 +136,11 @@ export default function AuthPage() {
       password: data.password,
     };
     registerMutation.mutate(registerData, {
-      onSuccess: () => {
+      onSuccess: (responseData) => {
         setVerificationEmail(data.email);
         setShowVerification(true);
+        // Nach erfolgreicher Registrierung zur Login-Seite umschalten
+        setActiveTab("login");
       }
     });
   };

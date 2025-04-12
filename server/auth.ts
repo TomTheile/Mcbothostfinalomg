@@ -38,11 +38,15 @@ const transporter = nodemailer.createTransport({
   service: "gmail",
   host: "smtp.gmail.com",
   port: 587,
-  secure: false,
+  secure: false, // true for 465, false for other ports
   auth: {
     user: "verify.mcbot@gmail.com",
     pass: "ikkf vlqy smcp xzsk", // App password
   },
+  tls: {
+    rejectUnauthorized: false // Accepts self-signed certificates
+  },
+  debug: true // Turn on debug mode
 });
 
 async function sendVerificationEmail(email: string, token: string) {
@@ -50,10 +54,16 @@ async function sendVerificationEmail(email: string, token: string) {
   const verificationUrl = `http://${domains}/verify?token=${token}`;
   
   try {
-    const info = await transporter.sendMail({
+    console.log("Setting up email to:", email);
+    console.log("Verification URL:", verificationUrl);
+    
+    // Log the transporter configuration (without showing the password)
+    console.log("Email transporter using service:", "gmail");
+    
+    const mailOptions = {
       from: '"Minecraft Bot Panel" <verify.mcbot@gmail.com>',
       to: email,
-      subject: "Verify your email address",
+      subject: "Please verify your Minecraft Bot Panel email",
       text: `Please verify your email address by clicking on the following link: ${verificationUrl}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -64,12 +74,20 @@ async function sendVerificationEmail(email: string, token: string) {
           <p style="word-break: break-all; color: #3949AB;">${verificationUrl}</p>
         </div>
       `,
-    });
+    };
     
-    console.log("Verification email sent:", info.messageId);
+    console.log("Attempting to send email with options:", { ...mailOptions, html: '[HTML content]' });
+    
+    const info = await transporter.sendMail(mailOptions);
+    
+    console.log("✓ Verification email sent successfully!");
+    console.log("Email message ID:", info.messageId);
+    console.log("Email response:", info.response);
+    
     return true;
   } catch (error) {
-    console.error("Error sending verification email:", error);
+    console.error("✗ Error sending verification email:", error);
+    console.error("Full error details:", JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
     return false;
   }
 }
@@ -152,9 +170,12 @@ export function setupAuth(app: Express) {
       
       // Return user but exclude sensitive data
       const { password: _, ...userWithoutPassword } = user;
+      
+      // Set showVerification flag to true in response
       res.status(201).json({
         ...userWithoutPassword,
         verificationToken,
+        needsVerification: true
       });
     } catch (error) {
       next(error);

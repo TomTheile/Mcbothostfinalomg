@@ -75,8 +75,11 @@ export default function AuthPage() {
       const res = await apiRequest("POST", "/api/register", credentials);
       return await res.json();
     },
-    onSuccess: () => {
-      setShowVerification(true);
+    onSuccess: (data) => {
+      if (data.needsVerification) {
+        setVerificationEmail(data.email);
+        setShowVerification(true);
+      }
     }
   });
 

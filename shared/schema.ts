@@ -8,6 +8,7 @@ export const users = pgTable("users", {
   password: text("password").notNull(),
   email: text("email").notNull().unique(),
   isVerified: boolean("is_verified").notNull().default(false),
+  isPremium: boolean("is_premium").notNull().default(false),
   verificationToken: text("verification_token"),
 });
 

@@ -148,25 +148,23 @@ export function setupAuth(app: Express) {
       // Generate verification token
       const verificationToken = generateVerificationToken();
       
-      // Create user with verification flag set to false by default
+      // Create user with default values
       const user = await storage.createUser({
         username,
         email,
-        password: await hashPassword(password),
-        isVerified: false
+        password: await hashPassword(password)
       });
       
-      // Update user with verification token and set verified to true
+      // Update user with verification token
       await storage.updateUser(user.id, { 
-        verificationToken,
-        isVerified: false
+        verificationToken
       });
       
       // Versuche, Verifizierungs-E-Mail zu senden (kann fehlschlagen)
       try {
         await sendVerificationEmail(email, verificationToken);
-      } catch (error) {
-        console.log("E-Mail-Versand fehlgeschlagen, aber Benutzer wurde erstellt:", error.message);
+      } catch (error: any) {
+        console.log("E-Mail-Versand fehlgeschlagen, aber Benutzer wurde erstellt:", error?.message || "Unbekannter Fehler");
       }
       
       // Return user but exclude sensitive data
@@ -231,7 +229,6 @@ export function setupAuth(app: Express) {
       
       // Update user to mark as verified and remove token
       const updatedUser = await storage.updateUser(user.id, {
-        isVerified: true,
         verificationToken: null,
       });
 
@@ -259,7 +256,8 @@ export function setupAuth(app: Express) {
         return res.status(400).json({ message: "User not found" });
       }
       
-      if (user.isVerified) {
+      // Wenn der Benutzer bereits verifiziert ist (kein Token mehr hat)
+      if (!user.verificationToken) {
         return res.status(400).json({ message: "User is already verified" });
       }
       

@@ -39,6 +39,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Invalid bot data", errors: validatedData.error });
       }
       
+      // Überprüfe, ob der Benutzer das Limit für die Anzahl der Bots erreicht hat
+      const existingBots = await storage.getBots(req.user.id);
+      
+      // Benutzer ohne Abonnement können nur 1 Bot haben
+      const isPremium = req.user.isPremium || false; // Default auf false, wenn nicht vorhanden
+      const maxBots = isPremium ? 99999 : 1; // Premium-Benutzer haben unbegrenzt Bots
+      
+      if (existingBots.length >= maxBots) {
+        return res.status(403).json({ 
+          message: "Bot limit reached", 
+          limit: maxBots,
+          needsPremium: !isPremium
+        });
+      }
+      
       // Create new bot
       const bot = await storage.createBot(validatedData.data);
       res.status(201).json(bot);

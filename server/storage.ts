@@ -69,6 +69,7 @@ export class MemStorage implements IStorage {
       ...insertUser, 
       id, 
       isVerified: false,
+      isPremium: false,
       verificationToken: null
     };
     this.users.set(id, user);
@@ -84,7 +85,13 @@ export class MemStorage implements IStorage {
     return updatedUser;
   }
 
-  async getBots(userId: number): Promise<Bot[]> {
+  async getBots(userId?: number): Promise<Bot[]> {
+    // Wenn keine userId angegeben ist, alle Bots zurückgeben
+    if (userId === undefined) {
+      return Array.from(this.bots.values());
+    }
+    
+    // Andernfalls nur die Bots des angegebenen Benutzers zurückgeben
     return Array.from(this.bots.values()).filter(
       (bot) => bot.userId === userId,
     );

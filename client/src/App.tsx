@@ -28,15 +28,17 @@ function Router() {
   );
 }
 
+import { queryClient } from './lib/queryClient';
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <AuthProvider>
+      <AuthProvider>
+        <ThemeProvider>
           <Router />
           <Toaster />
-        </AuthProvider>
-      </ThemeProvider>
+        </ThemeProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

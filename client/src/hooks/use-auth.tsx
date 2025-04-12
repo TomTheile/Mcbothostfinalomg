@@ -18,7 +18,14 @@ type AuthContextType = {
   resendVerificationMutation: UseMutationResult<{ message: string }, Error, { email: string }>;
 };
 
-export const AuthContext = createContext<AuthContextType | null>(null);
+export const AuthContext = createContext<AuthContextType>({
+  user: null,
+  login: async () => {},
+  logout: async () => {},
+  register: async () => {},
+  isLoading: false,
+  error: null
+});
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast();

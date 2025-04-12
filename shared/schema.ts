@@ -10,6 +10,7 @@ export const users = pgTable("users", {
   isVerified: boolean("is_verified").notNull().default(false),
   isPremium: boolean("is_premium").notNull().default(false),
   verificationToken: text("verification_token"),
+  premiumUntil: timestamp("premium_until"),
 });
 
 export const bots = pgTable("bots", {

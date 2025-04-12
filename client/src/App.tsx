@@ -7,6 +7,7 @@ import Dashboard from "@/pages/dashboard";
 import BotsPage from "@/pages/bots-page";
 import LogsPage from "@/pages/logs-page";
 import SettingsPage from "@/pages/settings-page";
+import PremiumPage from "@/pages/premium-page";
 import { ProtectedRoute } from "./lib/protected-route";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "./components/theme-provider";
@@ -20,6 +21,7 @@ function Router() {
       <ProtectedRoute path="/bots" component={BotsPage} />
       <ProtectedRoute path="/logs" component={LogsPage} />
       <ProtectedRoute path="/settings" component={SettingsPage} />
+      <ProtectedRoute path="/premium" component={PremiumPage} />
       <Route path="/auth" component={AuthPage} />
       <Route path="/verify" component={AuthPage} />
       <Route component={NotFound} />

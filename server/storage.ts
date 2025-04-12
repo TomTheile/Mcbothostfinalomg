@@ -70,7 +70,8 @@ export class MemStorage implements IStorage {
       id, 
       isVerified: false,
       isPremium: false,
-      verificationToken: null
+      verificationToken: null,
+      premiumUntil: null
     };
     this.users.set(id, user);
     return user;

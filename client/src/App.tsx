@@ -8,11 +8,10 @@ import BotsPage from "@/pages/bots-page";
 import LogsPage from "@/pages/logs-page";
 import SettingsPage from "@/pages/settings-page";
 import { ProtectedRoute } from "./lib/protected-route";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "./components/theme-provider";
 import { AuthProvider } from "./hooks/use-auth";
-
-const queryClient = new QueryClient();
+import { queryClient } from "./lib/queryClient";
 
 function Router() {
   return (

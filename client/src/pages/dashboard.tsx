@@ -19,13 +19,28 @@ export default function Dashboard() {
   });
 
   useEffect(() => {
-    // Set a refresh interval for bot data
-    const interval = setInterval(() => {
-      refetch();
-    }, 10000); // Refresh every 10 seconds
+    const ws = new WebSocket(`ws://${window.location.host}`);
     
-    return () => clearInterval(interval);
-  }, [refetch]);
+    ws.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      if (message.type === 'BOTS_UPDATE') {
+        queryClient.setQueryData(['/api/bots'], message.data);
+      }
+    };
+
+    ws.onclose = () => {
+      console.log('WebSocket disconnected');
+      // Attempt to reconnect in 2 seconds
+      setTimeout(() => {
+        console.log('Attempting to reconnect...');
+        window.location.reload();
+      }, 2000);
+    };
+
+    return () => {
+      ws.close();
+    };
+  }, []);
 
   // Calculate stats
   const totalBots = bots?.length || 0;

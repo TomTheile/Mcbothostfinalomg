@@ -230,6 +230,7 @@ export function setupAuth(app: Express) {
       // Update user to mark as verified and remove token
       const updatedUser = await storage.updateUser(user.id, {
         verificationToken: null,
+        isVerified: true
       });
 
       console.log("User verified successfully:", updatedUser);

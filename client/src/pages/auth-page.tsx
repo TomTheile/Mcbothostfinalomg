@@ -71,7 +71,7 @@ export default function AuthPage() {
   });
 
   const registerMutationFallback = useMutation({
-    mutationFn: async (credentials: RegisterFormValues) => {
+    mutationFn: async (credentials: { username: string; email: string; password: string; }) => {
       const res = await apiRequest("POST", "/api/register", credentials);
       return await res.json();
     },
@@ -125,11 +125,12 @@ export default function AuthPage() {
   };
 
   const onRegisterSubmit = (data: RegisterFormValues) => {
-    registerMutation.mutate({
+    const registerData = {
       username: data.username,
       email: data.email,
       password: data.password,
-    }, {
+    };
+    registerMutation.mutate(registerData, {
       onSuccess: () => {
         setVerificationEmail(data.email);
         setShowVerification(true);

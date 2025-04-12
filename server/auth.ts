@@ -33,15 +33,15 @@ function generateVerificationToken() {
   return randomBytes(32).toString("hex");
 }
 
-// Setup email transporter for a test environment
-// In production, you would use a proper email service
+// Setup Gmail email transporter
 const transporter = nodemailer.createTransport({
-  host: "smtp.ethereal.email",
+  service: "gmail",
+  host: "smtp.gmail.com",
   port: 587,
   secure: false,
   auth: {
-    user: process.env.EMAIL_USER || "test@example.com",
-    pass: process.env.EMAIL_PASS || "testpassword",
+    user: "verify.mcbot@gmail.com",
+    pass: "ikkf vlqy smcp xzsk", // App password
   },
 });
 
@@ -51,7 +51,7 @@ async function sendVerificationEmail(email: string, token: string) {
   
   try {
     const info = await transporter.sendMail({
-      from: '"Minecraft Bot Panel" <noreply@minecraftbots.com>',
+      from: '"Minecraft Bot Panel" <verify.mcbot@gmail.com>',
       to: email,
       subject: "Verify your email address",
       text: `Please verify your email address by clicking on the following link: ${verificationUrl}`,
@@ -162,13 +162,13 @@ export function setupAuth(app: Express) {
   });
 
   app.post("/api/login", (req, res, next) => {
-    passport.authenticate("local", (err, user, info) => {
+    passport.authenticate("local", (err: Error | null, user: Express.User | false, info: { message?: string } | undefined) => {
       if (err) return next(err);
       if (!user) {
-        return res.status(401).json({ message: info.message || "Authentication failed" });
+        return res.status(401).json({ message: info?.message || "Authentication failed" });
       }
       
-      req.login(user, (err) => {
+      req.login(user, (err: Error | null) => {
         if (err) return next(err);
         
         // Return user but exclude sensitive data

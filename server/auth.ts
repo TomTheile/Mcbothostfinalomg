@@ -33,13 +33,12 @@ function generateVerificationToken() {
   return randomBytes(32).toString("hex");
 }
 
-// Setup email transporter with ETHEREAL for testing
+// Setup email transporter with Gmail
 const transporter = nodemailer.createTransport({
-  host: 'smtp.ethereal.email',
-  port: 587,
+  service: 'gmail',
   auth: {
-    user: 'karli.roberts@ethereal.email',
-    pass: 'vYsRCCNW63jJ2w2qQA'
+    user: 'verify.mcbot@gmail.com',
+    pass: 'ikkf vlqy smcp xzsk'
   }
 });
 
@@ -55,7 +54,7 @@ async function sendVerificationEmail(email: string, token: string) {
     console.log("Email transporter using service:", "gmail");
     
     const mailOptions = {
-      from: '"Minecraft Bot Panel" <karli.roberts@ethereal.email>',
+      from: '"Minecraft Bot Panel" <verify.mcbot@gmail.com>',
       to: email,
       subject: "Please verify your Minecraft Bot Panel email",
       text: `Please verify your email address by clicking on the following link: ${verificationUrl}`,
@@ -111,10 +110,9 @@ export function setupAuth(app: Express) {
         if (!user || !(await comparePasswords(password, user.password))) {
           return done(null, false, { message: "Invalid username or password" });
         }
-        // TEMPORÄR DEAKTIVIERT: E-Mail-Verifizierung ist nicht erforderlich
-        // if (!user.isVerified) {
-        //   return done(null, false, { message: "Please verify your email before logging in" });
-        // }
+        if (!user.isVerified) {
+          return done(null, false, { message: "Please verify your email before logging in" });
+        }
         return done(null, user);
       } catch (err) {
         return done(err);
@@ -160,7 +158,7 @@ export function setupAuth(app: Express) {
       // Update user with verification token and set verified to true
       await storage.updateUser(user.id, { 
         verificationToken,
-        isVerified: true // TEMPORÄR: Benutzer automatisch verifizieren
+        isVerified: false
       });
       
       // Versuche, Verifizierungs-E-Mail zu senden (kann fehlschlagen)

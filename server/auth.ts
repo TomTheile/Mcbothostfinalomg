@@ -148,11 +148,12 @@ export function setupAuth(app: Express) {
       // Generate verification token
       const verificationToken = generateVerificationToken();
       
-      // Create user with verification flag already set to true (TEMPORÄR)
+      // Create user with verification flag set to false by default
       const user = await storage.createUser({
         username,
         email,
         password: await hashPassword(password),
+        isVerified: false
       });
       
       // Update user with verification token and set verified to true
@@ -229,14 +230,17 @@ export function setupAuth(app: Express) {
       }
       
       // Update user to mark as verified and remove token
-      await storage.updateUser(user.id, {
+      const updatedUser = await storage.updateUser(user.id, {
         isVerified: true,
         verificationToken: null,
       });
+
+      console.log("User verified successfully:", updatedUser);
       
       // Redirect to login page with success message
       res.redirect("/auth?verified=true");
     } catch (error) {
+      console.error("Verification error:", error);
       next(error);
     }
   });

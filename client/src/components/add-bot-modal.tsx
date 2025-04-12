@@ -43,7 +43,7 @@ export default function AddBotModal({ isOpen, onClose, onBotAdded }: AddBotModal
       name: "",
       serverAddress: "",
       serverPort: 25565,
-      gameVersion: "1.19.2",
+      gameVersion: "1.20.4",
       behavior: "passive",
       autoReconnect: false,
       recordChat: false,
@@ -156,18 +156,18 @@ export default function AddBotModal({ isOpen, onClose, onBotAdded }: AddBotModal
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="1.21.4">1.21.4</SelectItem>
                         <SelectItem value="1.20.4">1.20.4</SelectItem>
                         <SelectItem value="1.20.2">1.20.2</SelectItem>
+                        <SelectItem value="1.20.1">1.20.1</SelectItem>
                         <SelectItem value="1.19.4">1.19.4</SelectItem>
+                        <SelectItem value="1.19.3">1.19.3</SelectItem>
                         <SelectItem value="1.19.2">1.19.2</SelectItem>
+                        <SelectItem value="1.19.1">1.19.1</SelectItem>
+                        <SelectItem value="1.19">1.19</SelectItem>
                         <SelectItem value="1.18.2">1.18.2</SelectItem>
+                        <SelectItem value="1.18.1">1.18.1</SelectItem>
+                        <SelectItem value="1.18">1.18</SelectItem>
                         <SelectItem value="1.17.1">1.17.1</SelectItem>
-                        <SelectItem value="1.16.5">1.16.5</SelectItem>
-                        <SelectItem value="1.15.2">1.15.2</SelectItem>
-                        <SelectItem value="1.14.4">1.14.4</SelectItem>
-                        <SelectItem value="1.13.2">1.13.2</SelectItem>
-                        <SelectItem value="1.12.2">1.12.2</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />

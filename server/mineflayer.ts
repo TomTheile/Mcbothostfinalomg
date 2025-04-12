@@ -100,7 +100,19 @@ export async function connectBot(botId: number): Promise<Bot | undefined> {
 
     // Remove from active bots if it was added
     activeBots.delete(botId);
-    throw error;
+    // If version detection fails, try with configured version
+    if (error.message.includes('version')) {
+      console.log('Version detection failed, trying with configured version:', botConfig.gameVersion);
+      const bot = createBot({
+        host: botConfig.serverAddress,
+        port: botConfig.serverPort,
+        username: botConfig.name,
+        version: botConfig.gameVersion,
+        auth: 'offline'
+      });
+    } else {
+      throw error;
+    }
   }
 }
 

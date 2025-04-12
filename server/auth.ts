@@ -111,9 +111,10 @@ export function setupAuth(app: Express) {
         if (!user || !(await comparePasswords(password, user.password))) {
           return done(null, false, { message: "Invalid username or password" });
         }
-        if (!user.isVerified) {
-          return done(null, false, { message: "Please verify your email before logging in" });
-        }
+        // TEMPORÄR DEAKTIVIERT: E-Mail-Verifizierung ist nicht erforderlich
+        // if (!user.isVerified) {
+        //   return done(null, false, { message: "Please verify your email before logging in" });
+        // }
         return done(null, user);
       } catch (err) {
         return done(err);
@@ -149,18 +150,25 @@ export function setupAuth(app: Express) {
       // Generate verification token
       const verificationToken = generateVerificationToken();
       
-      // Create user
+      // Create user with verification flag already set to true (TEMPORÄR)
       const user = await storage.createUser({
         username,
         email,
         password: await hashPassword(password),
       });
       
-      // Update user with verification token
-      await storage.updateUser(user.id, { verificationToken });
+      // Update user with verification token and set verified to true
+      await storage.updateUser(user.id, { 
+        verificationToken,
+        isVerified: true // TEMPORÄR: Benutzer automatisch verifizieren
+      });
       
-      // Send verification email
-      await sendVerificationEmail(email, verificationToken);
+      // Versuche, Verifizierungs-E-Mail zu senden (kann fehlschlagen)
+      try {
+        await sendVerificationEmail(email, verificationToken);
+      } catch (error) {
+        console.log("E-Mail-Versand fehlgeschlagen, aber Benutzer wurde erstellt:", error.message);
+      }
       
       // Return user but exclude sensitive data
       const { password: _, ...userWithoutPassword } = user;

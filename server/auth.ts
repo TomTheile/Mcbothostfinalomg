@@ -215,7 +215,7 @@ export function setupAuth(app: Express) {
     res.json(userWithoutSensitiveData);
   });
 
-  app.get("/api/verify", async (req, res, next) => {
+  app.get("/verify", async (req, res, next) => {
     try {
       const { token } = req.query;
       

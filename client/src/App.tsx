@@ -1,3 +1,4 @@
+
 import { Switch, Route } from "wouter";
 import { Toaster } from "@/components/ui/toaster";
 import NotFound from "@/pages/not-found";
@@ -7,6 +8,11 @@ import BotsPage from "@/pages/bots-page";
 import LogsPage from "@/pages/logs-page";
 import SettingsPage from "@/pages/settings-page";
 import { ProtectedRoute } from "./lib/protected-route";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ThemeProvider } from "./components/theme-provider";
+import { AuthProvider } from "./hooks/use-auth";
+
+const queryClient = new QueryClient();
 
 function Router() {
   return (
@@ -24,10 +30,14 @@ function Router() {
 
 function App() {
   return (
-    <>
-      <Router />
-      <Toaster />
-    </>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <AuthProvider>
+          <Router />
+          <Toaster />
+        </AuthProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
 

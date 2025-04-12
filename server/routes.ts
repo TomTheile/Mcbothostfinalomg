@@ -4,10 +4,15 @@ import { storage } from "./storage";
 import { setupAuth } from "./auth";
 import { connectBot, disconnectBot, getBotStatus, getServerPlayers } from "./mineflayer";
 import { insertBotSchema } from "@shared/schema";
+import { generateRandomBotName, generateTransactionId } from "./bot-utils";
+import { setupPaymentRoutes } from "./payment";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Set up authentication routes
   setupAuth(app);
+  
+  // Set up payment routes
+  setupPaymentRoutes(app);
 
   // Bot management routes
   app.get("/api/bots", async (req, res, next) => {
@@ -29,11 +34,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Unauthorized" });
       }
       
-      // Validate request body
-      const validatedData = insertBotSchema.safeParse({
+      // Generiere einen zufälligen Bot-Namen, wenn kein Name angegeben wurde
+      const botData = {
         ...req.body,
+        name: req.body.name || generateRandomBotName(),
         userId: req.user.id,
-      });
+      };
+      
+      // Validate request body
+      const validatedData = insertBotSchema.safeParse(botData);
       
       if (!validatedData.success) {
         return res.status(400).json({ message: "Invalid bot data", errors: validatedData.error });

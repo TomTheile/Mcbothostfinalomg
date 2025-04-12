@@ -33,20 +33,14 @@ function generateVerificationToken() {
   return randomBytes(32).toString("hex");
 }
 
-// Setup Gmail email transporter
+// Setup email transporter with ETHEREAL for testing
 const transporter = nodemailer.createTransport({
-  service: "gmail",
-  host: "smtp.gmail.com",
+  host: 'smtp.ethereal.email',
   port: 587,
-  secure: false, // true for 465, false for other ports
   auth: {
-    user: "verify.mcbot@gmail.com",
-    pass: "ikkf vlqy smcp xzsk", // App password
-  },
-  tls: {
-    rejectUnauthorized: false // Accepts self-signed certificates
-  },
-  debug: true // Turn on debug mode
+    user: 'karli.roberts@ethereal.email',
+    pass: 'vYsRCCNW63jJ2w2qQA'
+  }
 });
 
 async function sendVerificationEmail(email: string, token: string) {
@@ -61,7 +55,7 @@ async function sendVerificationEmail(email: string, token: string) {
     console.log("Email transporter using service:", "gmail");
     
     const mailOptions = {
-      from: '"Minecraft Bot Panel" <verify.mcbot@gmail.com>',
+      from: '"Minecraft Bot Panel" <karli.roberts@ethereal.email>',
       to: email,
       subject: "Please verify your Minecraft Bot Panel email",
       text: `Please verify your email address by clicking on the following link: ${verificationUrl}`,

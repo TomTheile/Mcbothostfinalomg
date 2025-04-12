@@ -36,6 +36,9 @@ export class MemStorage implements IStorage {
     });
     this.currentUserId = 1;
     this.currentBotId = 1;
+    
+    // Für Testzwecke: Setze den Speicher zurück
+    console.log("Memory storage initialized, clearing any existing data");
   }
 
   async getUser(id: number): Promise<User | undefined> {
@@ -93,7 +96,16 @@ export class MemStorage implements IStorage {
 
   async createBot(insertBot: InsertBot): Promise<Bot> {
     const id = this.currentBotId++;
+    const defaultValues = {
+      serverPort: 25565,
+      gameVersion: "1.19.2",
+      behavior: "passive",
+      autoReconnect: false,
+      recordChat: false
+    };
+    
     const bot: Bot = {
+      ...defaultValues,
       ...insertBot,
       id,
       status: "disconnected",

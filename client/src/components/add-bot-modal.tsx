@@ -36,7 +36,7 @@ interface AddBotModalProps {
 export default function AddBotModal({ isOpen, onClose, onBotAdded }: AddBotModalProps) {
   const { user } = useAuth();
   const { toast } = useToast();
-  
+
   const form = useForm<BotFormValues>({
     resolver: zodResolver(botSchema),
     defaultValues: {
@@ -49,7 +49,7 @@ export default function AddBotModal({ isOpen, onClose, onBotAdded }: AddBotModal
       recordChat: false,
     },
   });
-  
+
   const addBotMutation = useMutation({
     mutationFn: async (data: BotFormValues) => {
       const res = await apiRequest("POST", "/api/bots", {
@@ -75,7 +75,7 @@ export default function AddBotModal({ isOpen, onClose, onBotAdded }: AddBotModal
       });
     },
   });
-  
+
   const onSubmit = (data: BotFormValues) => {
     addBotMutation.mutate(data);
   };
@@ -89,7 +89,7 @@ export default function AddBotModal({ isOpen, onClose, onBotAdded }: AddBotModal
             Configure your bot to connect to a Minecraft server
           </DialogDescription>
         </DialogHeader>
-        
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
@@ -105,7 +105,7 @@ export default function AddBotModal({ isOpen, onClose, onBotAdded }: AddBotModal
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="serverAddress"
@@ -119,7 +119,7 @@ export default function AddBotModal({ isOpen, onClose, onBotAdded }: AddBotModal
                 </FormItem>
               )}
             />
-            
+
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
@@ -139,7 +139,7 @@ export default function AddBotModal({ isOpen, onClose, onBotAdded }: AddBotModal
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="gameVersion"
@@ -156,10 +156,17 @@ export default function AddBotModal({ isOpen, onClose, onBotAdded }: AddBotModal
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
+                        <SelectItem value="1.21.4">1.21.4</SelectItem>
+                        <SelectItem value="1.20.4">1.20.4</SelectItem>
+                        <SelectItem value="1.20.2">1.20.2</SelectItem>
+                        <SelectItem value="1.19.4">1.19.4</SelectItem>
                         <SelectItem value="1.19.2">1.19.2</SelectItem>
                         <SelectItem value="1.18.2">1.18.2</SelectItem>
                         <SelectItem value="1.17.1">1.17.1</SelectItem>
                         <SelectItem value="1.16.5">1.16.5</SelectItem>
+                        <SelectItem value="1.15.2">1.15.2</SelectItem>
+                        <SelectItem value="1.14.4">1.14.4</SelectItem>
+                        <SelectItem value="1.13.2">1.13.2</SelectItem>
                         <SelectItem value="1.12.2">1.12.2</SelectItem>
                       </SelectContent>
                     </Select>
@@ -168,7 +175,7 @@ export default function AddBotModal({ isOpen, onClose, onBotAdded }: AddBotModal
                 )}
               />
             </div>
-            
+
             <FormField
               control={form.control}
               name="behavior"
@@ -205,7 +212,7 @@ export default function AddBotModal({ isOpen, onClose, onBotAdded }: AddBotModal
                 </FormItem>
               )}
             />
-            
+
             <div className="space-y-3">
               <h4 className="text-sm font-medium">Advanced Options</h4>
               <div className="bg-muted rounded-md p-3 space-y-3">
@@ -226,7 +233,7 @@ export default function AddBotModal({ isOpen, onClose, onBotAdded }: AddBotModal
                     </FormItem>
                   )}
                 />
-                
+
                 <FormField
                   control={form.control}
                   name="recordChat"
@@ -246,7 +253,7 @@ export default function AddBotModal({ isOpen, onClose, onBotAdded }: AddBotModal
                 />
               </div>
             </div>
-            
+
             <DialogFooter className="gap-2 sm:gap-0">
               <Button
                 type="button"
